@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="movie"
+            type="com.example.movie.model.Movie" />
+
+        <variable
+            name="companyAdapter"
+            type="com.example.movie.ui.adapter.CompanyAdapter" />
+
+        <variable
+            name="movieAdapter"
+            type="com.example.movie.ui.adapter.SimilarMoviesAdapter" />
+
+        <variable
+            name="vm"
+            type="com.example.movie.ui.details.DetailViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="32dp"
+            android:descendantFocusability="blocksDescendants">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:paddingStart="12dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="6dp"
+                android:translationZ="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/image"
+                app:onBackPressed="@{true}"
+                app:srcCompat="@drawable/ic_arrow" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_marginBottom="20dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:translationZ="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:paletteImage="@{movie.getBgImageUrl}"
+                app:toast="@{vm.toastMessage}" />
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:gone="@{!vm.loading}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="36dp"
+                android:fontFamily="casual"
+                android:text="@{movie.titleValue}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/white"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:translationZ="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image"
+                tools:text="Twlight" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvReleaseData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@{movie.releaseDate}"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/tvVote"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvName"
+                tools:text="Release Date" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvVote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_vote"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@{String.valueOf(movie.voteValue) + `/10`}"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/tvLanguage"
+                app:layout_constraintStart_toEndOf="@+id/tvReleaseData"
+                app:layout_constraintTop_toBottomOf="@+id/tvName"
+                tools:text="Vote" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_language"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@{movie.launguageName}"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvVote"
+                app:layout_constraintTop_toBottomOf="@+id/tvName"
+                tools:text="Language" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPopularity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_popularity"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@{vm.movieInfoLiveData.getPopularityValue}"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/tvReleaseStatus"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvReleaseData"
+                tools:text="Popularity" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvReleaseStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_release_status"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@{vm.movieInfoLiveData.getReleaseData}"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvPopularity"
+                app:layout_constraintTop_toBottomOf="@+id/tvReleaseData"
+                tools:text="Release Status" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOverViewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@string/overview"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPopularity" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOverView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="casual"
+                android:minHeight="40dp"
+                android:padding="6dp"
+                android:text="@{vm.movieInfoLiveData.getOverviewValue}"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvOverViewLabel" />
+
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="28dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvOverView">
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(view) -> vm.toCastScreen(view)}"
+                    android:text="@string/casting"
+                    app:chipIcon="@drawable/ic_cast" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(view) -> vm.toReviewerScreen(view)}"
+                    android:text="@string/review"
+                    app:chipIcon="@drawable/ic_review" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvProductionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@string/production"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cgButton" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProduction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:fadeScrollbars="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:padding="6dp"
+                app:adapter="@{companyAdapter}"
+                app:adapterProduction="@{vm.movieInfoLiveData.productionCompanies}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvProductionLabel"
+                app:spanCount="2"
+                app:toast="@{vm.toastMessage}"
+                tools:listitem="@layout/item_company" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvSimilarLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:elevation="4dp"
+                android:fontFamily="casual"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@string/similar_movies"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvProduction" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPopular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:fadeScrollbars="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:padding="6dp"
+                app:adapter="@{movieAdapter}"
+                app:adapterSimilarList="@{vm.similarMovieLiveData}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSimilarLabel"
+                app:spanCount="2"
+                app:toast="@{vm.toastMessage}"
+                tools:listitem="@layout/item_similar" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>
